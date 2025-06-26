@@ -1,0 +1,170 @@
+import React, { useState, FormEvent } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { ArrowRight, Facebook } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+import Logo from '../../components/ui/Logo';
+import Avatar from '../../components/ui/Avatar';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import { useAuth } from '../../context/AuthContext';
+
+const SignUp = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const navigate = useNavigate();
+  const { signup } = useAuth();
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!name) newErrors.name = 'Name is required';
+    if (!email) newErrors.email = 'Email is required';
+    if (!password) newErrors.password = 'Password is required';
+    if (password && password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
+    try {
+      await signup(name, email, password);
+      navigate('/onboarding');
+    } catch (error) {
+      setErrors({ form: 'Error creating account. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const GoogleIcon = () => (
+    <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+      <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
+        <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
+        <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/>
+        <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"/>
+        <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
+      </g>
+    </svg>
+  );
+
+  return (
+    <motion.div 
+      className="min-h-screen flex flex-col items-center justify-center bg-white p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="w-full max-w-md">
+        <div className="mb-8 text-center">
+          <Logo variant="primary" className="inline-block mb-6" />
+          <Avatar expression="excited" size="lg" className="mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-text-dark">Create your account</h1>
+        </div>
+
+        <div className="mb-6 flex flex-col sm:flex-row gap-3">
+          <Button 
+            variant="socialLogin" 
+            icon={<GoogleIcon />}
+            fullWidth
+          >
+            Sign up with Google
+          </Button>
+          <Button 
+            variant="socialLogin" 
+            icon={<Facebook size={18} />}
+            fullWidth
+          >
+            Sign up with Facebook
+          </Button>
+        </div>
+
+        <div className="flex items-center mb-6">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="px-3 text-sm text-gray-500">or</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        {errors.form && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+            {errors.form}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <Input
+            label="Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+            error={errors.name}
+            required
+          />
+
+          <Input
+            label="Email Address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            error={errors.email}
+            required
+          />
+
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Create a password"
+            error={errors.password}
+            required
+          />
+
+          <div className="mb-6 text-xs text-text-light">
+            By clicking "Sign up", you agree to our{' '}
+            <a href="#" className="text-primary-blue hover:underline">
+              Terms of Use
+            </a>{' '}
+            and{' '}
+            <a href="#" className="text-primary-blue hover:underline">
+              Privacy Policy
+            </a>
+            .
+          </div>
+
+          <Button
+            variant="primary"
+            type="submit"
+            icon={<ArrowRight size={18} />}
+            iconPosition="right"
+            disabled={isLoading}
+            fullWidth
+          >
+            {isLoading ? 'Creating account...' : 'Sign Up'}
+          </Button>
+        </form>
+
+        <p className="mt-8 text-center text-sm text-text-light">
+          Already have an account?{' '}
+          <Link to="/signin" className="text-primary-blue hover:underline font-semibold">
+            Sign In
+          </Link>
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
+export default SignUp;

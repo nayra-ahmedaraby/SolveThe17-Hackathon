@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: white;
+  color: #333333;
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+:root {
+  --color-primary-blue: #0077D8;
+  --color-primary-light: #BFDDF5;
+  --color-accent-orange-light: #FEA77F;
+  --color-accent-orange-dark: #FF8651;
+  --color-text-dark: #333333;
+  --color-text-light: #555555;
+  --color-input-border: #CCCCCC;
+  --color-disabled-grey: #A0A0A0;
+}
+
+/* Add direct styles */
+.primary-button {
+  background-color: #0077D8;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+}
+
+.secondary-button {
+  background-color: white;
+  color: #0077D8;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: 2px solid #0077D8;
+  cursor: pointer;
+}
+
+.primary-blue-bg {
+  background-color: #0077D8;
+}
+
+.primary-blue-text {
+  color: #0077D8;
+}
+
+.primary-blue-border {
+  border-color: #0077D8;
+}
+
+.white-text {
+  color: white;
+}
+
+.dark-text {
+  color: #333333;
+}
+
+.light-text {
+  color: #555555;
+}
+
+#root {
+  background-color: white;
+}
+
+/* Add some custom styles */
+@layer components {
+  .bg-primary-blue {
+    background-color: var(--color-primary-blue);
+  }
+  
+  .text-primary-blue {
+    color: var(--color-primary-blue);
+  }
+  
+  .border-primary-blue {
+    border-color: var(--color-primary-blue);
+  }
+  
+  .bg-primary-light {
+    background-color: var(--color-primary-light);
+  }
+  
+  .bg-accent-orange-light {
+    background-color: var(--color-accent-orange-light);
+  }
+  
+  .bg-accent-orange-dark {
+    background-color: var(--color-accent-orange-dark);
+  }
+}
